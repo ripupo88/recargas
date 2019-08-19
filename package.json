@@ -1,0 +1,15 @@
+{
+  "name": "recargas",
+  "version": "0.0.1",
+  "description": "recargas a cubacel",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Richar\tPupo Reyes\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b\u001b[3~\u001b[3~",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.6.9"
+  }
+}
