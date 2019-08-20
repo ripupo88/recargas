@@ -1,18 +1,26 @@
+// importaciones
 const express = require('express');
 const mongoose = require('mongoose');
-require('./db/mongo');
-const app = express()
+//require('./db/mongo');
+const escucha = require('./correo/escuchando');
 
-mongoose.connect('mongodb://localhost/recargasdb', {useNewUrlParser: true});
-
-
-
+//iniciando express
+const app = express();
 
 
+// conectando mongoose
+mongoose.connect('mongodb://localhost/recargasdb', { useNewUrlParser: true });
+
+function textoRecibido(text) {
+    console.log(text);
+}
 
 
-app.get('/', function (req, res) {
+
+
+//escuchando puerto express 
+app.get('/', function(req, res) {
     res.send('Hello World')
-  });
-   
-  app.listen(3000);
+});
+
+app.listen(3000);
