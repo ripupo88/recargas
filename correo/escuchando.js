@@ -1,7 +1,7 @@
 const MailListener = require("mail-listener2");
 const EventEmitter = require('events');
 
-let newmail = new EventEmitter();
+var newmail = new EventEmitter();
 
 var mailListener = new MailListener({
     username: "recargacuba@outlook.com",
@@ -41,9 +41,12 @@ mailListener.on("error", function(err) {
 
 mailListener.on("mail", function(mail, seqno, attributes) {
     // do something with mail object including attachments
-    textoRecibido(mail.text);
 
-    newmail.emit('correo', mail.text);
+    let correo = {
+        from: mail.from[0].address,
+        text: mail.subject + " " + mail.text
+    }
+    newmail.emit('correo', correo);
     // mail processing code goes here
 });
 
@@ -51,4 +54,4 @@ mailListener.on("attachment", function(attachment) {
     console.log(attachment.path);
 });
 
-module.exports = newmail;
+module.exports = { newmail };
