@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 let Schema = mongoose.Schema;
 
-var regCorreo = '([\\w-+]+(?:\\.[\\w-+]+)*@(?:[\\w-]+\\.)+[a-zA-Z]{2,7})';
-var regNumero = '(5\d{7})';
+//var regCorreo = '/([\\w-+]+(?:\\.[\\w-+]+)*@(?:[\\w-]+\\.)+[a-zA-Z]{2,7})/';
+var regNumero = '/(5\d{7})/';
 
 let rolesValidos = {
     values: ['ADMIN_ROLE', 'USER_ROLE', 'CREADOR'],
@@ -23,10 +23,10 @@ let usuarioSchema = new Schema({
     },
     nombre: { type: String, required: true },
     correos: [{
-        correo: { type: String, unique: true, match: regCorreo },
+        correo: { type: String, unique: true }, //match: regCorreo
         activo: { type: Boolean, default: true, index: true }
     }],
-    telegram_id: { type: Number, unique: true },
+    telegram_id: { type: Number },
     creado_por: { type: String, required: true },
     limite: { type: Number },
     activo: { type: Boolean, default: true },
