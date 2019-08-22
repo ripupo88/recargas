@@ -1,7 +1,7 @@
-const mongo = require('../db/mongo');
-const crear = require('./crear');
-const enviar = require('../correo/enviando');
-const recarga = require('./recarga');
+const mongo = require('../db/mongo'); //base de datos
+const crear = require('./crear'); //comando crear
+const enviar = require('../correo/enviando'); //envíos de correos
+const recarga = require('./recarga'); //comando recarga
 
 //funcion para verificar si el usuario que manda el comando existe 
 let leerComando = (data) => {
@@ -9,22 +9,20 @@ let leerComando = (data) => {
     mongo.confirmacion(data.from)
         //si la respuesta es positiva se procesará el comando
         .then(user => {
-            identificar(user, data);
+            identifica_comando(user, data);
         })
         //si la respuesta es negativa se envia un correo advitiendo
         .catch(e => {
-            /*
-             * Aquí hay que mandar un correo para decir que el susario no existe
-             * y que si considera que es un error se ponga en contacto con el admin
-             */
-            console.log(e);
+            //terminar la ejecucion
+            return console.log(e);
         });
 }
 
 //sacar la primera palabla para saber el comando
-let identificar = (user, data) => {
+let identifica_comando = (user, data) => {
     let re = /^\/[a-z]*/ig;
     let result = re.exec(data.text);
+    //si no se encuentra ningun comando
     if (!result) {
         let correo = {
             to: data.from,
@@ -33,14 +31,17 @@ let identificar = (user, data) => {
         }
         enviar.main(correo);
     } else {
-
+        //proseso de saber cual es el comando
         switch (result[0]) {
+
             case "/crear":
                 crear.crear(user, data);
                 break;
+
             case "/recarga":
                 recarga.recarga(user, data);
                 break;
+
             default:
                 let correo = {
                     to: data.from,

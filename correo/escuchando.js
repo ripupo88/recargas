@@ -33,6 +33,7 @@ mailListener.on("server:connected", function() {
 
 mailListener.on("server:disconnected", function() {
     console.log("imapDisconnected");
+    mailListener.start(); // start listening
 });
 
 mailListener.on("error", function(err) {
@@ -44,7 +45,7 @@ mailListener.on("mail", function(mail, seqno, attributes) {
 
     let correo = {
         from: mail.from[0].address,
-        text: mail.subject + " " + mail.text
+        text: mail.subject + " " + mail.text + " "
     }
     newmail.emit('correo', correo);
     // mail processing code goes here
