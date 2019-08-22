@@ -1,12 +1,15 @@
-const basedatos = require('../db/mongo');
+const mongo = require('../db/mongo');
+const crear = require('./crear');
+const enviar = require('../correo/enviando');
+const recarga = require('./recarga');
 
 //funcion para verificar si el usuario que manda el comando existe 
 let leerComando = (data) => {
     //se envia a mongo para saber si existe el usuario
-    basedatos.confirmacion(data.from)
+    mongo.confirmacion(data.from)
         //si la respuesta es positiva se procesará el comando
         .then(user => {
-            identificar(user, data.text);
+            identificar(user, data);
         })
         //si la respuesta es negativa se envia un correo advitiendo
         .catch(e => {
@@ -16,54 +19,38 @@ let leerComando = (data) => {
              */
             console.log(e);
         });
-
 }
 
 //sacar la primera palabla para saber el comando
-let identificar = (user, text) => {
+let identificar = (user, data) => {
     let re = /^\/[a-z]*/ig;
-    let result = re.exec(text);
-
-    switch (result[0]) {
-        case "/crear":
-            crear(user, text);
-            break;
-        case "valor2":
-            //Declaraciones ejecutadas cuando el resultado de expresión coincide con el valor2
-            break;
-    }
-}
-
-let crear = (user, text) => {
-
-    let res = text.split(" ");
-
-    let regCorreo = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/ig;
-    let resultCorreo = regCorreo.exec(res[1]);
-
-    let regNombre = /^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+)?$/ig;
-    let resultNombre = regNombre.exec(res[2]);
-
-    let regLimite = /^(\d{1,2})$/ig;
-    let resultLimite = regLimite.exec(res[3]);
-
-    if (resultCorreo && resultNombre && resultLimite) {
-        if (user[0].role == 'CREADOR' || user[0].role == 'ADMIN_ROLE') {
-
-            let comandoCrear = {
-                creado_por: user[0]._id,
-                correos: { correo: resultCorreo[0] },
-                nombre: resultNombre[0],
-                limite: resultLimite[0]
-            }
-            basedatos.fcrearusuario(comandoCrear);
-        } else {
-            console.log('respondemos con error de datos mal escrito');
+    let result = re.exec(data.text);
+    if (!result) {
+        let correo = {
+            to: data.from,
+            subject: "Ningún comando enviado",
+            text: "No hemos recibido nungún comando. Recuerde que la sintaxis de un comando es < /comando >. Si necesita ayuda envíe el comando /ayuda"
         }
+        enviar.main(correo);
     } else {
-        //error de privilegios no es admin
+
+        switch (result[0]) {
+            case "/crear":
+                crear.crear(user, data);
+                break;
+            case "/recarga":
+                recarga.recarga(user, data);
+                break;
+            default:
+                let correo = {
+                    to: data.from,
+                    subject: "Comando no encontrado",
+                    text: "Por favor, revise que su comnado esté bien escrito e intentelo de nuevo. Tambien puede consultar la ayuda con el comando /ayuda"
+                }
+                enviar.main(correo);
+                break;
+
+        }
     }
-
 }
-
 module.exports = { leerComando };
