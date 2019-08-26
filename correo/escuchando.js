@@ -4,8 +4,8 @@ const EventEmitter = require('events');
 var newmail = new EventEmitter();
 
 var mailListener = new MailListener({
-    username: "recargacuba@outlook.com",
-    password: "Ri12chAR+",
+    username: "",
+    password: "",
     host: "outlook.office365.com",
     port: 993, // imap port
     tls: true,
