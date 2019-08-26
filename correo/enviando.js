@@ -13,8 +13,8 @@ async function main(data) {
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-            user: 'recargacuba@outlook.com', // generated ethereal user
-            pass: 'Ri12chAR+' // generated ethereal password
+            user: '', // generated ethereal user
+            pass: '' // generated ethereal password
         },
         tls: {
             rejectUnauthorized: false
